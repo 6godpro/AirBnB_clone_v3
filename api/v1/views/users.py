@@ -47,12 +47,7 @@ def users_id(user_id=None):
 
     if request.method == 'PUT':
         req = request.get_json()
-        DEFAULTS = ['id', 'email', 'created_at', 'updated_at']
-        new_dict = {
-            k: v for k, v in req.items()
-            if k not in DEFAULTS
-        }
-        for k, v in new_dict.items():
-            setattr(user, k, v)
-        user.save()
+        if req is None:
+            abort(400, "Not a JSON")
+        user.update(req)
         return jsonify(user.to_dict())

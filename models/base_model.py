@@ -79,7 +79,9 @@ class BaseModel:
         if type(value) != dict:
             raise TypeError("Update only accepts dictionary")
 
-        default_attr = ['id', 'created_at']
+        default_attr = ['id', 'created_at',
+                        'updated_at', 'email',
+                        'state_id']
         new_dict = {
             k: v for k, v in value.items()
             if k not in default_attr

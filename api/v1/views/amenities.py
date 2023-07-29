@@ -51,17 +51,5 @@ def amenities_id(amenity_id=None):
         req = request.get_json()
         if req is None:
             abort(400, "Not a JSON")
-        """
-            Line 59-66 can be implemented in the
-            base class to avoid repitition in other
-            endpoints.
-        """
-        DEFAULTS = ['id', 'created_at', 'updated_at']
-        new_dict = {
-            k: v for k, v in req.items()
-            if k not in DEFAULTS
-        }
-        for k, v in new_dict.items():
-            setattr(amenity, k, v)
-        amenity.save()
+        amenity.update(req)
         return jsonify(amenity.to_dict())
