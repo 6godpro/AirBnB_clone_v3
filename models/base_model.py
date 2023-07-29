@@ -74,7 +74,6 @@ class BaseModel:
         """delete the current instance from the storage"""
         models.storage.delete(self)
 
-    @staticmethod
     def ignore_values(func):
         """decorate update method"""
 
