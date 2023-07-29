@@ -49,5 +49,6 @@ def users_id(user_id=None):
         req = request.get_json()
         if req is None:
             abort(400, "Not a JSON")
-        user.update(req)
+        user.update(req, ignore=["id",
+                    "created_at", "email", "__class__"])
         return jsonify(user.to_dict())

@@ -51,5 +51,6 @@ def amenities_id(amenity_id=None):
         req = request.get_json()
         if req is None:
             abort(400, "Not a JSON")
-        amenity.update(req)
+        amenity.update(req, ignore=["id", "user_id",
+                       "place_id", "created_at", "__class__"])
         return jsonify(amenity.to_dict())
