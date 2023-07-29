@@ -20,7 +20,7 @@ def amenities():
         return jsonify([v.to_dict() for v in storage.all(Amenity).values()])
 
     if request.method == 'POST':
-        req = request.get_json()
+        req = request.get_json(silent=True)
         if req is None:
             abort(400, "Not a JSON")
         if 'name' not in req.keys():
@@ -32,7 +32,7 @@ def amenities():
 
 @app_views.route("/amenities/<amenity_id>", methods=['GET', 'DELETE', 'PUT'])
 def amenities_id(amenity_id=None):
-    """Retrieves, updates, or deletes a amenity.
+    """Retrieves, updates, or deletes an amenity.
     """
     amenity = storage.get(Amenity, amenity_id)
 
@@ -51,6 +51,5 @@ def amenities_id(amenity_id=None):
         req = request.get_json()
         if req is None:
             abort(400, "Not a JSON")
-        amenity.update(req, ignore=["id", "user_id",
-                       "place_id", "created_at", "__class__"])
+        amenity.update(req)
         return jsonify(amenity.to_dict())

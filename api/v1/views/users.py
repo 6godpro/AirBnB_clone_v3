@@ -14,6 +14,7 @@ from models.user import User
 
 @app_views.route("/users", methods=['GET', 'POST'])
 def users():
+    """Retrieves and creates users."""
     if request.method == 'GET':
         return jsonify([v.to_dict() for v in storage.all(User).values()])
 
@@ -32,8 +33,8 @@ def users():
 
 @app_views.route("/users/<user_id>", methods=['GET', 'DELETE', 'PUT'])
 def users_id(user_id=None):
+    """Retrieves, deletes, or updates a user."""
     user = storage.get(User, user_id)
-
     if user is None:
         abort(404)
 
