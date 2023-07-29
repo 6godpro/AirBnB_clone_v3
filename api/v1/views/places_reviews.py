@@ -15,7 +15,7 @@ from models.user import User
 
 
 @app_views.route("/places/<place_id>/reviews", methods=['GET', 'POST'],
-                strict_slashes=False)
+                 strict_slashes=False)
 def places_review(place_id=None):
     """ Retrieves all reviews of a place.
         Creates a review for a place.
