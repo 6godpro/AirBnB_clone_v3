@@ -70,5 +70,6 @@ def review(review_id=None):
         req = request.get_json(silent=True)
         if req is None:
             abort(400, description="Not a JSON")
-        review.update(req)
+        review.update(req, ignore=["id", "user_id", "place_id",
+                                   "created_at", "__class__"])
         return jsonify(review.to_dict())

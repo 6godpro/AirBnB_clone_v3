@@ -28,7 +28,7 @@ def users():
             abort(400, description="Missing password")
         user = User(**req)
         user.save()
-        return make_response(user.to_dict(), 201)
+        return make_response(jsonify(user.to_dict()), 201)
 
 
 @app_views.route("/users/<user_id>",
@@ -53,5 +53,5 @@ def users_id(user_id=None):
         if req is None:
             abort(400, description="Not a JSON")
         user.update(req, ignore=["id",
-                    "created_at", "email", "__class__"])
+                                 "created_at", "email", "__class__"])
         return jsonify(user.to_dict())
