@@ -78,7 +78,8 @@ class BaseModel:
     def ignore_values(func):
         """decorate update method"""
 
-        def function_wrapper(self, value, ignore=["id", "created_at", "__class__"]):
+        def function_wrapper(self, value,
+                             ignore=["id", "created_at", "__class__"]):
             """parse update args and remove <ignore> from <values>"""
             print(value, ignore)
             if type(ignore) != list:
