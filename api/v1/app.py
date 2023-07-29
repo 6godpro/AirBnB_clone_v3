@@ -10,7 +10,7 @@ from flask import Flask, jsonify, make_response
 
 app = Flask(__name__)
 app.register_blueprint(app_views)
-print(app.url_map)
+
 
 @app.errorhandler(404)
 def page_not_found(error):
