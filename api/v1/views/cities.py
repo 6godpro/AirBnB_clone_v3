@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-"""Index view
+"""Cities view model
 """
 from api.v1.views import app_views
 from flask import (
@@ -16,9 +16,9 @@ from models.city import City
 @app_views.route("/states/<state_id>/cities",
                  methods=['GET', 'POST'], strict_slashes=False)
 def get_or_create_cities(state_id=None):
-    """Retrieve all states or a state if <state_id> is provided
+    """Retrieve all cities of <state_id>
     """
-    state = storage.get(State, id=state_id)
+    state = storage.get(State, state_id)
     if state is None:
         abort(404)
 
@@ -41,6 +41,8 @@ def get_or_create_cities(state_id=None):
 @app_views.route("/cities/<city_id>",
                  methods=['GET', 'DELETE', 'PUT'], strict_slashes=False)
 def delete_get_or_update_city(city_id=None):
+    """DELETE/GET/UPDATE a city
+    """
     city = storage.get(City, city_id)
 
     if city is None:
