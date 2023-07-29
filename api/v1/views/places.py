@@ -69,5 +69,5 @@ def delete_get_or_update_place(place_id=None):
         if req is None:
             abort(400, description="Not a JSON")
         place.update(req, ignore=["id", "user_id",
-                                  "city_id", "created_at", "__class__"])
+                     "city_id", "created_at", "__class__"])
         return jsonify(place.to_dict())
