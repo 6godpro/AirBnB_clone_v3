@@ -12,8 +12,9 @@ from models import storage
 from models.user import User
 
 
-@app_views.route("/users", methods=['GET', 'POST'])
+@app_views.route("/users", methods=['GET', 'POST'], strict_slashes=False)
 def users():
+    """get all users in database"""
     if request.method == 'GET':
         return jsonify([v.to_dict() for v in storage.all(User).values()])
 
@@ -30,8 +31,10 @@ def users():
         return make_response(user.to_dict(), 201)
 
 
-@app_views.route("/users/<user_id>", methods=['GET', 'DELETE', 'PUT'])
+@app_views.route("/users/<user_id>",
+                 methods=['GET', 'DELETE', 'PUT'], strict_slashes=False)
 def users_id(user_id=None):
+    """get/delete or update a user"""
     user = storage.get(User, user_id)
 
     if user is None:
