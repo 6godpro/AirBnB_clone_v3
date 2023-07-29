@@ -51,6 +51,7 @@ def get_or_create_places(city_id=None):
 @app_views.route("/places/<place_id>",
                  methods=['GET', 'DELETE', 'PUT'], strict_slashes=False)
 def delete_get_or_update_place(place_id=None):
+    """DELETE/GET/UPDATE a place"""
     place = storage.get(Place, place_id)
 
     if place is None:
