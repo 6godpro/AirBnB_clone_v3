@@ -27,7 +27,7 @@ def not_allowed(error):
 @app.errorhandler(400)
 def bad_request(error):
     """400 Error Handler"""
-    return jsonify({"error": f"{error.description}"})
+    return make_response(jsonify({"error": f"{error.description}"}), 400)
 
 
 @app.teardown_appcontext
