@@ -27,13 +27,13 @@ def get_or_create_places(city_id=None):
         abort(404)
 
     if request.method == 'GET':
-        return jsonify([city.to_dict() for city in city.places])
+        return jsonify([place.to_dict() for place in city.places])
 
     if request.method == 'POST':
         req = request.get_json(silent=True)
-        user_id = req.get('user_id', None)
         if req is None:
             abort(400, description="Not a JSON")
+        user_id = req.get('user_id', None)
         if user_id is None:
             abort(400, description="Missing user_id")
         if 'name' not in req.keys():
@@ -45,7 +45,7 @@ def get_or_create_places(city_id=None):
         req["city_id"] = city_id
         place = Place(**req)
         place.save()
-        return make_response(place.to_dict(), 201)
+        return make_response(jsonify(place.to_dict()), 201)
 
 
 @app_views.route("/places/<place_id>",
