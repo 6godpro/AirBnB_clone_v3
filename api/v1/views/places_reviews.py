@@ -50,7 +50,7 @@ def places_review(place_id=None):
 
 @app_views.route("/reviews/<review_id>", methods=['GET', 'DELETE', 'PUT'],
                  strict_slashes=False)
-def places_review(review_id=None):
+def review(review_id=None):
     """ Retrieves, Deletes or Updates a reviews.
     """
     review = storage.get(Review, review_id)
