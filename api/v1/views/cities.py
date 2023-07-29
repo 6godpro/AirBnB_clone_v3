@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-"""Index view
+"""Cities view model
 """
 from api.v1.views import app_views
 from flask import (
@@ -18,7 +18,7 @@ from models.city import City
 def get_or_create_cities(state_id=None):
     """Retrieve all states or a state if <state_id> is provided
     """
-    state = storage.get(State, id=state_id)
+    state = storage.get(State, state_id)
     if state is None:
         abort(404)
 

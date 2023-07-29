@@ -20,7 +20,7 @@ def amenities():
         return jsonify([v.to_dict() for v in storage.all(Amenity).values()])
 
     if request.method == 'POST':
-        req = request.get_json()
+        req = request.get_json(silent=True)
         if req is None:
             abort(400, "Not a JSON")
         if 'name' not in req.keys():
@@ -48,7 +48,7 @@ def amenities_id(amenity_id=None):
         return jsonify({})
 
     if request.method == 'PUT':
-        req = request.get_json()
+        req = request.get_json(silent=True)
         if req is None:
             abort(400, "Not a JSON")
         amenity.update(req, ignore=["id", "user_id",
