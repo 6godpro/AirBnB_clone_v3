@@ -18,13 +18,13 @@ def users():
         return jsonify([v.to_dict() for v in storage.all(User).values()])
 
     if request.method == 'POST':
-        req = request.get_json()
+        req = request.get_json(silent=True)
         if req is None:
-            abort(400, "Not a JSON")
+            abort(400, description="Not a JSON")
         if 'email' not in req.keys():
-            abort(400, "Missing email")
+            abort(400, description="Missing email")
         if 'password' not in req.keys():
-            abort(400, "Missing password")
+            abort(400, description="Missing password")
         user = User(**req)
         user.save()
         return make_response(user.to_dict(), 201)
@@ -46,9 +46,9 @@ def users_id(user_id=None):
         return jsonify({})
 
     if request.method == 'PUT':
-        req = request.get_json()
+        req = request.get_json(silent=True)
         if req is None:
-            abort(400, "Not a JSON")
+            abort(400, description="Not a JSON")
         user.update(req, ignore=["id",
                     "created_at", "email", "__class__"])
         return jsonify(user.to_dict())

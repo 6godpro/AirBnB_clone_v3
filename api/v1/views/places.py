@@ -17,11 +17,12 @@ from models.user import User
 @app_views.route("/cities/<city_id>/places",
                  methods=['GET', 'POST'], strict_slashes=False)
 def get_or_create_places(city_id=None):
-    """Retrieve all place objects of <city_id> or create a place using <city_id>
+    """Retrieve all place objects of <city_id> or create a
+    place using <city_id>
     methods-allowed: GET -> get all places in in <city_id>
                      POST -> create a place object using <city_id>
     """
-    city = storage.get(City, id=city_id)
+    city = storage.get(City, city_id)
     if city is None:
         abort(404)
 
@@ -66,6 +67,6 @@ def delete_get_or_update_place(place_id=None):
         req = request.get_json(silent=True)
         if req is None:
             abort(400, description="Not a JSON")
-        place.update(req,
-                     ignore=["id", "user_id", "city_id", "created_at", "__class__"])
+        place.update(req, ignore=["id", "user_id",
+                     "city_id", "created_at", "__class__"])
         return jsonify(place.to_dict())

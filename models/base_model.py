@@ -74,12 +74,12 @@ class BaseModel:
         """delete the current instance from the storage"""
         models.storage.delete(self)
 
+    @staticmethod
     def ignore_values(func):
         """decorate update method"""
 
         def function_wrapper(self, value,
                              ignore=["id", "created_at", "__class__"]):
-            """parse update args and remove <ignore> from <values>"""
             if type(ignore) != list:
                 raise TypeError("ignore has to be an array")
             if type(value) != dict:
