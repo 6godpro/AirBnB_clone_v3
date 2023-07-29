@@ -54,7 +54,6 @@ def delete_get_or_update_place(place_id=None):
 
     if place is None:
         abort(404)
-    print(place)
     if request.method == 'GET':
         return jsonify(place.to_dict())
 
