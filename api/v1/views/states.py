@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-"""Index view
+"""State view
 """
 from api.v1.views import app_views
 from flask import (
