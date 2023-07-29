@@ -29,15 +29,15 @@ def places_review(place_id=None):
         return jsonify(place.reviews)
 
     if request.method == 'POST':
-        req = request.get_json()
+        req = request.get_json(silent=True)
         if req is None:
-            abort(400, "Not a JSON")
+            abort(400, description="Not a JSON")
 
         if 'user_id' not in req.keys():
-            abort(400, "Missing user_id")
+            abort(400, description="Missing user_id")
 
         if 'text' not in req.keys():
-            abort(400, "Missing text")
+            abort(400, description="Missing text")
 
         user = storage.get(User, req['user_id'])
         if user is None:
@@ -69,7 +69,6 @@ def review(review_id=None):
     if request.method == 'PUT':
         req = request.get_json(silent=True)
         if req is None:
-            abort(400, "Not a JSON")
-        review.update(req, ignore=["id", "user_id", "place_id",
-                                  "created_at", "__class__"])
+            abort(400, description="Not a JSON")
+        review.update(req)
         return jsonify(review.to_dict())

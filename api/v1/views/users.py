@@ -12,29 +12,31 @@ from models import storage
 from models.user import User
 
 
-@app_views.route("/users", methods=['GET', 'POST'])
+@app_views.route("/users", methods=['GET', 'POST'], strict_slashes=False)
 def users():
-    """Retrieves and creates users."""
+    """get all users in database"""
     if request.method == 'GET':
         return jsonify([v.to_dict() for v in storage.all(User).values()])
 
     if request.method == 'POST':
-        req = request.get_json()
+        req = request.get_json(silent=True)
         if req is None:
-            abort(400, "Not a JSON")
+            abort(400, description="Not a JSON")
         if 'email' not in req.keys():
-            abort(400, "Missing email")
+            abort(400, description="Missing email")
         if 'password' not in req.keys():
-            abort(400, "Missing password")
+            abort(400, description="Missing password")
         user = User(**req)
         user.save()
         return make_response(user.to_dict(), 201)
 
 
-@app_views.route("/users/<user_id>", methods=['GET', 'DELETE', 'PUT'])
+@app_views.route("/users/<user_id>",
+                 methods=['GET', 'DELETE', 'PUT'], strict_slashes=False)
 def users_id(user_id=None):
-    """Retrieves, deletes, or updates a user."""
+    """get/delete or update a user"""
     user = storage.get(User, user_id)
+
     if user is None:
         abort(404)
 
@@ -47,9 +49,9 @@ def users_id(user_id=None):
         return jsonify({})
 
     if request.method == 'PUT':
-        req = request.get_json()
+        req = request.get_json(silent=True)
         if req is None:
-            abort(400, "Not a JSON")
+            abort(400, description="Not a JSON")
         user.update(req, ignore=["id",
-                    "created_at", "email", "__class__"])
+                                 "created_at", "email", "__class__"])
         return jsonify(user.to_dict())
