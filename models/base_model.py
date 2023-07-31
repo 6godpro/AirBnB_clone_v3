@@ -55,10 +55,6 @@ class BaseModel:
 
     def save(self):
         """updates the attribute 'updated_at' with the current datetime"""
-        if "password" in self.__dict__:
-            hash = md5()
-            hash.update(self.password.encode('utf-8'))
-            self.password = hash.hexdigest()
         self.updated_at = datetime.utcnow()
         models.storage.new(self)
         models.storage.save()
@@ -100,6 +96,10 @@ class BaseModel:
     @ignore_values
     def update(self, value):
         """updates the value of basemodel instance"""
+        if "password" in value:
+            hash = md5()
+            hash.update(value["password"].encode('utf-8'))
+            value["password"] = hash.hexdigest()
         for k, v in value.items():
             setattr(self, k, v)
         self.save()
