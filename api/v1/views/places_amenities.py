@@ -3,8 +3,12 @@
 """
 import os
 from api.v1.views import app_views
-from flask import jsonify
-from models import storage
+from flask import (
+    abort,
+    jsonify,
+    request
+)
+from models import storage, storage_t
 from models.amenity import Amenity
 from models.place import Place
 
@@ -38,7 +42,7 @@ def delete_create_amenity(place_id=None, amenity_id=None):
         if amenity not in place.amenities:
             abort(404)
 
-        if storage.storage_t != db:
+        if storage_t != "db":
             place.amenity_ids.remove(amenity.id)
 
         amenity.delete()
@@ -49,7 +53,9 @@ def delete_create_amenity(place_id=None, amenity_id=None):
         if amenity in place.amenities:
             return jsonify(amenity.to_dict()), 200
 
-        amenity = Amenity(place_id=place_id)
-        if storage.storage_t != db:
+        if storage_t != "db":
             place.amenity_ids.append(amenity.id)
-        return jsonify(amenity.to_dict()), 200
+        else:
+            place.amenities.append(amenity)
+        storage.save()
+        return jsonify(amenity.to_dict()), 201
