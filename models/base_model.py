@@ -6,6 +6,7 @@ Contains class BaseModel
 from datetime import datetime
 import models
 from os import getenv
+from hashlib import md5
 import sqlalchemy
 from sqlalchemy import Column, String, DateTime
 from sqlalchemy.ext.declarative import declarative_base
@@ -95,6 +96,10 @@ class BaseModel:
     @ignore_values
     def update(self, value):
         """updates the value of basemodel instance"""
+        if "password" in value:
+            hash = md5()
+            hash.update(value["password"].encode('utf-8'))
+            value["password"] = hash.hexdigest()
         for k, v in value.items():
             setattr(self, k, v)
         self.save()
