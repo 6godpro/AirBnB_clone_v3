@@ -30,5 +30,5 @@ class User(BaseModel, Base):
         hash = md5()
         if kwargs:
             hash.update(b'%b' % kwargs["password"].encode('utf-8'))
-        kwargs["password"] = hash.hexdigest()
+            kwargs["password"] = hash.hexdigest()
         super().__init__(*args, **kwargs)
