@@ -73,9 +73,9 @@ class FileStorage:
         """ Retreives an object using its id. """
         if cls in classes.keys() or cls in classes.values():
             if isinstance(cls, str):
-                key = f"{cls}.{id}"
+                key = "{cls}.{id}".format(cls, id)
             else:
-                key = f"{cls.__name__}.{id}"
+                key = "{cls.__name__}.{id}".format(cls, id)
             return self.__objects.get(key, None)
 
     def count(self, cls=None):
