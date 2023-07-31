@@ -73,13 +73,14 @@ def delete_get_or_update_place(place_id=None):
 @app_views.route("/places_search", methods=['POST'], strict_slashes=False)
 def search_place():
     """get all places"""
-    places = storage.all(Place).values()
+    all_places = storage.all(Place).values()
+
     req = request.get_json(silent=True)
     if req is None:
         abort(400, description="Not a JSON")
 
     if len(req) == 0:
-        return jsonify([place.to_dict() for place in places])
+        return jsonify([place.to_dict() for place in all_places])
 
     state_ids = req.get("states", None)
     city_ids = req.get("cities", None)
@@ -90,11 +91,11 @@ def search_place():
     if isinstance(state_ids, list):
         states = [storage.get(State, id) for id in state_ids]
         cities = [[city for city in state.cities] for state in states if state]
-        for city in cities:
-            if city:
-                places_in_state.extend([place for place in city.places
-                                        if place not in places_in_state])
-
+        for inner_city in cities:
+            for city in inner_city:
+                if city:
+                    places_in_state.extend([place for place in city.places
+                                            if place not in places_in_state])
     if isinstance(city_ids, list):
         cities = [storage.get(City, id) for id in city_ids]
         for city in cities:
@@ -104,12 +105,15 @@ def search_place():
 
     places_in_cities.extend(places_in_state)
     places_filtered = set(places_in_cities)
-    if len(places_filtered) == 0 and not state_ids and not city_ids:
+    if len(places_filtered) == 0 and \
+            (not state_ids) and (not city_ids) and amenity_ids:
         new_places = []
-        for place in places:
+        for place in all_places:
+            print([amenity.id for amenity in place.amenities])
             if all(map(lambda amenity_id: 1 if amenity_id in
                        [amenity.id for amenity in place.amenities]
                        else 0, amenity_ids)):
+                del place.amenities
                 new_places.append(place)
         return jsonify([place.to_dict() for place in new_places])
 
@@ -121,5 +125,6 @@ def search_place():
         if all(map(lambda amenity_id: 1 if amenity_id in
                    [amenity.id for amenity in place.amenities]
                    else 0, amenity_ids)):
+            del place.amenities
             new_places.append(place)
     return jsonify([place.to_dict() for place in new_places])
