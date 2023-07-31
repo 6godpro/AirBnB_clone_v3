@@ -77,8 +77,9 @@ def search_place():
     req = request.get_json(silent=True)
     if req is None:
         abort(400, description="Not a JSON")
+
     if len(req) == 0:
-        return jsonify(places)
+        return jsonify([place.to_dict() for place in places])
 
     state_ids = req.get("states", None)
     city_ids = req.get("cities", None)
@@ -90,14 +91,16 @@ def search_place():
         states = [storage.get(State, id) for id in state_ids]
         cities = [[city for city in state.cities] for state in states if state]
         for city in cities:
-            places_in_state.extend([place for place in city.places
-                                    if place not in places_in_state])
+            if city:
+                places_in_state.extend([place for place in city.places
+                                        if place not in places_in_state])
 
     if isinstance(city_ids, list):
         cities = [storage.get(City, id) for id in city_ids]
         for city in cities:
-            places_in_cities.extend([place for place in city.places
-                                    if place not in places_in_cities])
+            if city:
+                places_in_cities.extend([place for place in city.places
+                                         if place not in places_in_cities])
 
     places_in_cities.extend(places_in_state)
     places_filtered = set(places_in_cities)
@@ -108,10 +111,10 @@ def search_place():
                        [amenity.id for amenity in place.amenities]
                        else 0, amenity_ids)):
                 new_places.append(place)
-        return jsonify(new_places)
+        return jsonify([place.to_dict() for place in new_places])
 
-    if len(amenity_ids) == 0:
-        return jsonify(places_filtered)
+    if not amenity_ids:
+        return jsonify([place.to_dict() for place in places_filtered])
 
     new_places = []
     for place in places_filtered:
@@ -119,4 +122,4 @@ def search_place():
                    [amenity.id for amenity in place.amenities]
                    else 0, amenity_ids)):
             new_places.append(place)
-    return jsonify(new_places)
+    return jsonify([place.to_dict() for place in new_places])
