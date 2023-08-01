@@ -26,7 +26,7 @@ def places_review(place_id=None):
         abort(404)
 
     if request.method == 'GET':
-        return jsonify(place.reviews)
+        return jsonify([review.to_dict() for review in place.reviews])
 
     if request.method == 'POST':
         req = request.get_json(silent=True)
@@ -43,9 +43,10 @@ def places_review(place_id=None):
         if user is None:
             abort(404)
 
+        req['place_id'] = place_id
         review = Review(**req)
         review.save()
-        return make_response(jsonify(review.to_dict()), 201)
+        return jsonify(review.to_dict()), 201
 
 
 @app_views.route("/reviews/<review_id>", methods=['GET', 'DELETE', 'PUT'],
