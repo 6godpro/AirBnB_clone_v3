@@ -12,7 +12,7 @@ from models import storage
 from models.amenity import Amenity
 
 
-@app_views.route("/amenities", methods=['GET', 'POST'])
+@app_views.route("/amenities", methods=['GET', 'POST'], strict_slashes=False)
 def amenities():
     """Retrieve all amenities or creates a new amenity.
     """
@@ -30,7 +30,8 @@ def amenities():
         return make_response(amenity.to_dict(), 201)
 
 
-@app_views.route("/amenities/<amenity_id>", methods=['GET', 'DELETE', 'PUT'])
+@app_views.route("/amenities/<amenity_id>",
+                 methods=['GET', 'DELETE', 'PUT'], strict_slashes=False)
 def amenities_id(amenity_id=None):
     """Retrieves, updates, or deletes an amenity.
     """
