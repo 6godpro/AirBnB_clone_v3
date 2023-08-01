@@ -105,26 +105,24 @@ def search_place():
 
     places_in_cities.extend(places_in_state)
     places_filtered = set(places_in_cities)
-    if len(places_filtered) == 0 and \
-            (not state_ids) and (not city_ids) and amenity_ids:
-        new_places = []
-        for place in all_places:
-            print([amenity.id for amenity in place.amenities])
-            if all(map(lambda amenity_id: 1 if amenity_id in
-                       [amenity.id for amenity in place.amenities]
-                       else 0, amenity_ids)):
-                del place.amenities
-                new_places.append(place)
-        return jsonify([place.to_dict() for place in new_places])
 
     if not amenity_ids:
         return jsonify([place.to_dict() for place in places_filtered])
 
+    if len(places_filtered) == 0 and not state_ids and not city_ids:
+        new_places = filter_places_by_amenity(all_places, amenity_ids)
+        return jsonify([place.to_dict() for place in new_places])
+
+    new_places = filter_places_by_amenity(places_filtered, amenity_ids)
+    return jsonify([place.to_dict() for place in new_places])
+
+
+def filter_places_by_amenity(places, amenity_ids):
     new_places = []
-    for place in places_filtered:
+    for place in places:
         if all(map(lambda amenity_id: 1 if amenity_id in
                    [amenity.id for amenity in place.amenities]
                    else 0, amenity_ids)):
             del place.amenities
             new_places.append(place)
-    return jsonify([place.to_dict() for place in new_places])
+    return new_places
